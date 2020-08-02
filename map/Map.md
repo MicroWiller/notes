@@ -8,7 +8,7 @@
 
 Map 存放`Entry键值对`的	
 
-![image-20200603215723727](Map.assets/image-20200603215723727.png)
+<img src="Map.assets/image-20200603215017986.png" alt="image-20200603215017986" style="zoom:80%;" />
 
 - key必须是唯一的，map里面只能存放一个key为null的Entry，但是可以存放多个value为null的Entry
 

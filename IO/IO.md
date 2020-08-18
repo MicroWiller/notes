@@ -1,4 +1,4 @@
-# IO
+# IO 
 
 [理论基础](https://www.bilibili.com/video/BV1Af4y117ZK?t=7&p=2)	：
 
@@ -167,6 +167,8 @@ private transient Object[] elementData;
 InetAddress.getByName(String host);
 InetAddress.getByAddress(byte[] address);
 ```
+
+
 #### URL
 
 统一资源定位符
@@ -216,12 +218,36 @@ public static void main(String[] args) throws IOException {
 - DatagramPacket：数据包类
 
 
+
+
+
+## BIO
+
+
+
+[Blocking IO 原理讲解](https://www.bilibili.com/video/BV1Af4y117ZK?p=3) 
+
+![image-20200802163142400](IO.assets/image-20200802163142400.png)
+
+
+
+
+
 ## NIO
-- 新的输入/输出 (NIO) 库是在 `JDK 1.4 `中引入的，弥补了原来的 I/O 的不足，提供了`高速的、面向块`的 I/O。
+
+
+
+
+
+### New IO
+
+
+
+- 新的输入/输出 (New IO) 库是在 `JDK 1.4 `中引入的，弥补了原来的 I/O 的不足，提供了`高速的、面向块`的 I/O。
 > 块、通道、缓冲区
 
 
-### 流与块
+#### 流与块
 
 |                    |          I/O          |           NIO            |
 | ------------------ | --------------------- | ------------------------ |
@@ -236,7 +262,7 @@ public static void main(String[] args) throws IOException {
 
 
 
-### 通道
+#### 通道 Channel
 > 通道 Channel 是对原 I/O 包中的流的`模拟`，可以通过它读取和写入数据
 
 |                              流                               |             通道             |
@@ -252,7 +278,9 @@ public static void main(String[] args) throws IOException {
 
 
 
-### 缓冲区
+
+
+#### 缓冲区 Buffer
 
 > 发送给一个通道的所有数据都必须首`先放到缓冲区`中，同样地，从通道中读取的任何数据都要先读到缓冲区中。
 > `不会直接`对通道进行读写数据，而是要先经过缓冲区。
@@ -279,7 +307,7 @@ public static void main(String[] args) throws IOException {
 
 
 
-### 文件 NIO 实例
+#### 文件 NIO 实例
 
 ```java
 public static void fastCopy(String src, String dist) throws IOException {
@@ -324,13 +352,184 @@ public static void fastCopy(String src, String dist) throws IOException {
 
 
 
-### 选择器
+
+#### 选择器 Selector
+
+select、poll、epoll、kqueue
 
 
 
 
 
 
+
+### NonBlocking IO
+
+内核的后续版本提供了 SOCK_NONBLOCK
+
+```shell
+# man socket
+SOCK_NONBLOCK. SOCK_CLOEXEC
+       Linux-specific shortcuts to specify the "O_NONBLOCK" and "FD_CLOEXEC" flags during a socket(2) call.
+```
+
+
+
+[追踪代码](https://www.bilibili.com/video/BV1Af4y117ZK?p=5) 
+
+```shell
+strace -ff -o out java SocketNIO
+```
+
+```java
+import org.aspectj.weaver.ast.Var;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.LinkedList;
+
+public class SocketNIO {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        // 创建客户端连接缓存？？该数据结构效率很差
+        LinkedList<SocketChannel> clients = new LinkedList<>();
+        ServerSocketChannel serverSocket = ServerSocketChannel.open();
+        serverSocket.bind(new InetSocketAddress(9090));
+        serverSocket.configureBlocking(false); // OS：NoNBlocking IO
+	   // 接收客户端的连接      
+        while (true) {
+            Thread.sleep(1000);
+            /**
+             * 没有连接请求时候：(不会阻塞)
+             *      1. java 返回 null
+             *      2. OS   返回 -1
+             */
+            SocketChannel client = serverSocket.accept();
+            if (client == null) {
+                System.out.println("null......");
+            }else {
+                client.configureBlocking(false);
+                int port = client.socket().getPort();
+                System.out.println("client...port: " + port);
+                clients.add(client);
+            }
+
+            ByteBuffer buffer = ByteBuffer.allocateDirect(4096);
+
+            // 遍历每个链接进来的客户端，是否可以读写数据
+            for (SocketChannel c : clients) {
+
+                /**
+                 * read() 方法不会阻塞（因为 client.configureBlocking(false);）
+                 *
+                 * 如果当前连接有数据则 >0，否则为 -1 或者 0
+                 */
+                int num = c.read(buffer);
+                if (num > 0) {
+                    buffer.flip();
+                    byte[] bytes = new byte[buffer.limit()];
+                    buffer.get(bytes);
+                    String s = new String(bytes);
+                    System.out.println(c.socket().getPort() + ":" + s);
+                    buffer.clear();
+                }
+            }
+        }
+    }
+}
+
+```
+
+分析：
+
+![image-20200805102744874](IO.assets/image-20200805102744874.png)
+
+== >  多路复用：
+select、poll、epoll
+
+
+
+
+
+## 多路复用
+
+
+
+真正读之前，调用了某个kernel系统方法，*从用户态切换到内核态*，对所有的**fd**进行了筛选，**筛选**出真正有数据的**fd**
+
+- 输入假设的1W次连接，返回有数据的具体连接
+
+
+
+> 多路复用器：
+>
+> - *只是返回 IO的一个状态*，具体哪些文件描述符可以读写
+> - 用一次的系统(kernel)调用，询问所有IO的状态，减少用户态到内核态的切换
+
+很多个**fd** 复用一次系统调用==》多路复用器
+
+
+
+### select/poll
+
+- select 有1024的限制
+
+![image-20200806172939774](IO.assets/image-20200806172939774.png)
+
+
+
+- 同步IO模型：无论BIO，NIO，多路复用器，都需要程序自己读取IO
+
+- 异步IO模型：Windows IOCP
+  - 程序不想要调receive，只是注册了未来IO上读写的事件
+  - 内核开辟线程，把注册的方法执行了，把数据拷贝到程序的内存空间
+  - 程序不需要自己去调读写IO的方法
+
+
+
+### epoll
+
+[epoll的推导 30:00](https://www.bilibili.com/video/BV1Af4y117ZK?p=5) 
+
+[空间换时间](https://www.bilibili.com/video/BV1Af4y117ZK?p=6)	：
+
+CPU01进行内核态操作，CPU02进行用户态操作
+
+对比：select、poll，两颗CPU不能并行的去 把这个操作过程**分开**执行
+
+```c
+#include <sys/epoll.h>
+int epoll_create(...);
+// 内核里面开辟一个空间
+```
+
+```c
+#include <sys/epoll.h>
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *events);
+// epfd：内核里创建的空间
+// op：操作
+// fd：待操作的文件描述符
+// epoll_event：关注什么事件
+```
+
+```c
+#include <sys/epoll.h>
+// 用户程序 想要状态时候执行
+int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+int epoll_pwait(int epfd, struct epoll_event *events, int maxevents, 
+                int timeout, const sigset_t *sigmask);
+// 用户程序还是可能会阻塞等待，不过可以设置等待时间(timeout)，最优情况下复杂度为O(1)
+```
+
+<img src="IO.assets/image-20200808211457037.png" alt="image-20200808211457037" style="zoom:80%;" />
+
+```c
+// epoll_wait 返回状态后：
+accept(3) = 8;
+// 用户程序自己去读写 ==> 同步模型
+epoll_ctl(7, ADD, 8, read);
+```
 
 
 

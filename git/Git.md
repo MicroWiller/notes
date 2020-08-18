@@ -47,6 +47,8 @@ git config --global user.email 'your_email'
    git init
    ```
 
+   
+
 2. 新建的项目直接用Git管理
 
    ```git
@@ -244,7 +246,37 @@ git stash pop    # stash对应的状态被清除
 
 
 
+### 合并
 
+<img src="Git.assets/image-20200815215346852.png" alt="image-20200815215346852" style="zoom:67%;" />
+
+```git
+git merge bugFix
+# 将bugFix合并到 当前HEAD指向的master分支
+```
+
+<img src="Git.assets/image-20200815215448075.png" alt="image-20200815215448075" style="zoom:67%;" />
+
+将bugFix前移：
+
+<img src="Git.assets/image-20200815215659454.png" alt="image-20200815215659454" style="zoom:67%;" />
+
+
+
+
+
+### 重定基
+
+```git
+git rebase bugFix 
+# 将bugFix分支的“基准”重定为 当前HEAD指向的分支
+```
+
+
+
+![image-20200814224803107](Git.assets/image-20200814224803107.png)
+
+![image-20200814224831845](Git.assets/image-20200814224831845.png)
 
 ## .git目录
 
@@ -309,18 +341,24 @@ commit、tree、blob(文件对象)
 
 ## 分离头指针
 
+<img src="Git.assets/image-20200815214431732.png" alt="image-20200815214431732" style="zoom:67%;" />
+
 > 分离头指针，变更没有基于任何 branch 去做；
 >
 
-HEAD 没有**绑定** 任何<u>分支和标签</u>： 
+
+
+- HEAD 没有**绑定** 任何<u>分支和标签</u>： 
 
 <img src="Git.assets/image-20200715183925160.png" alt="image-20200715183925160" style="zoom:67%;" />
 
-- 分支切换的时候，分离头指针上的 commit 很容易被当做垃圾清掉
+- 分支切换的时候，**分离头指针上的 commit** 很容易被当做垃圾清掉
 
 修复方法： 
 
 <img src="Git.assets/image-20200715184621678.png" alt="image-20200715184621678" style="zoom:70%;" />
+
+
 
 
 
@@ -356,4 +394,54 @@ HEAD 没有**绑定** 任何<u>分支和标签</u>：
 区别：
 
 <img src="Git.assets/image-20200717171619807.png" alt="image-20200717171619807" style="zoom:50%;" />
+
+
+
+
+
+## Linux 环境下安装Git
+
+
+
+第一步：安装编译 git 时需要的包 
+
+```shell
+yum install -y curl-devel expat-devel gettext-devel openssl-devel zlib-devel 
+
+yum install -y gcc perl-ExtUtils-MakeMaker 
+```
+
+第二步：删除已有的 git 
+
+```shell
+yum remove git 
+```
+
+第三步：Git 官网下载 Git 最新版 tar 包，移动到/usr/src 目录下 
+
+```shell
+cd /usr/src 
+
+tar -zxvf git-2.9.3.tar.gz 
+```
+
+第四步：编译安装 
+
+```shell
+cd git-2.9.3 
+
+make prefix=/usr/local/git all
+
+make prefix=/usr/local/git install 
+
+echo "export PATH=$PATH:/usr/local/git/bin" >> /etc/bashrc 
+
+source /etc/bashrc
+```
+
+第五步：检查一下版本号 
+
+```shell
+git --version
+```
 

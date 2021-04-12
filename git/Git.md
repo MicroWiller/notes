@@ -246,7 +246,43 @@ git stash pop    # stash对应的状态被清除
 
 
 
+### 分支
+
+
+
+```git
+git branch newBranch
+```
+
+建分支，相当于说， 想基于这个提交以及它所有的父提交进行新的工作 
+
+
+
+```git
+git checkout newBranch
+```
+
+将Head头指针，切换到新分支
+
+
+
+```git
+git checkout -b newBranch   # 可以将上面两步，和一起
+```
+
+
+
+
+
 ### 合并
+
+
+
+ 合并两个分支时会产生一个特殊的提交记录 ， 它有两个父节点 
+
+换句话说，就是 把这两个父节点本身及它们所有的祖先都包含进来 
+
+
 
 <img src="Git.assets/image-20200815215346852.png" alt="image-20200815215346852" style="zoom:67%;" />
 
@@ -267,6 +303,8 @@ git merge bugFix
 
 ### 重定基
 
+
+
 ```git
 git rebase bugFix 
 # 将bugFix分支的“基准”重定为 当前HEAD指向的分支
@@ -278,7 +316,74 @@ git rebase bugFix
 
 ![image-20200814224831845](Git.assets/image-20200814224831845.png)
 
-## .git目录
+
+
+
+
+### 在提交树上移动
+
+
+
+ HEAD 是一个对当前检出记录的符号引用 —— 也就是指向你正在其基础上进行工作的提交记录， 总是指向当前分支上最近一次提交记录 。
+
+```git
+cat .git/HEAD   # 可以查看HEAD指向
+```
+
+```git
+git symbolic-ref HEAD  # 如果 HEAD 指向的是一个引用，可以查看它的指向
+```
+
+
+
+分离的HEAD， 就是让其指向了某个**具体的**提交记录，**而不是**分支名
+
+<img src="Git.assets/1600434079986.png" alt="1600434079986" style="zoom:67%;" />
+
+
+
+
+
+
+
+### 相对引用
+
+
+
+- 使用 `^` 向上移动 1 个提交记录
+
+  ```git
+  git checkout master^   # master^ 相当于“master 的父节点”
+  git checkout master^^  # master^^ 是 master 的第二个父节点
+  ```
+
+<img src="Git.assets/1600434691181.png" alt="1600434691181" style="zoom:67%;" />
+
+
+
+- 使用 `~` 向上移动多个提交记录，如 `~3`
+
+  ```git
+  git checkout master~3   # 一次性后退四步
+  ```
+
+
+
+### 强制修改分支位置
+
+
+
+```git
+git branch -f master HEAD~3  # 将 master 分支强制指向 HEAD 的第 3 级父提交
+```
+
+注：HEAD头指针并没有指向master
+
+
+
+
+
+##  .git目录
 
 隐藏文件夹 **.git** 是`版本库` 
 
@@ -364,24 +469,11 @@ commit、tree、blob(文件对象)
 
 
 
-## 分支
 
-1. HEAD指针严格来说不是指向提交，而是指向master，`master才指向提交`，所以，HEAD指向的就是当前分支。
-![](Git.assets/20200306120739933_2876.png )
 
-2.  当我们创建新的分支，例如dev，Git新建一个指针叫dev，指向master相同的提交，再把HEAD指向dev，就表示`当前分支`在dev上：
-![](Git.assets/20200306121028163_3834.png )
 
-3. 从现在开始，对工作区的修改和提交就是`针对dev分支`，比如新提交一次后，dev指针往前移动一步，而master指针不变：
-![](Git.assets/20200306121154123_14764.png )
 
-4. 把master指向dev的当前提交，就完成了合并：
-![](Git.assets/20200306121321326_7039.png )
 
-5. 合并完分支后，甚至可以删除dev分支。就剩下了一条master分支：
-![](Git.assets/20200306121408744_1342.png )
-
-6. 多个分支可能造成`冲突`，不同分支可能都做了不同的修改
 
 
 
@@ -445,3 +537,8 @@ source /etc/bashrc
 git --version
 ```
 
+
+
+## window下git多账户管理
+
+ [window下git多账户管理](https://juejin.cn/post/6912337687366565895)	

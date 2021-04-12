@@ -310,7 +310,7 @@ bean的生命周期：
 
 
 
-#### @Bean里面指定
+#### 1. @Bean里面指定
 
 ```java
     @Scope("prototype") // 原型模式，多实例
@@ -337,7 +337,7 @@ public class Car {
 
 
 
-#### InitializingBean和DisposableBean接口
+#### 2. InitializingBean和DisposableBean接口
 
 ```java
 @ComponentScan(value = "com.will.pojo")
@@ -364,7 +364,7 @@ public class Cat implements InitializingBean, DisposableBean {
 
 
 
-#### @PostConstruct和@PreDestroy
+#### 补充: @PostConstruct和@PreDestroy
 
 ```java
 @Component
@@ -387,7 +387,7 @@ public class Student {
 
 
 
-### BeanPostProcessor接口
+### BeanPostProcessor
 
 > bean的后置处理器，在bean**初始化前后**进行一些处理工作
 
@@ -815,7 +815,7 @@ AOP：在程序运行时，**动态的将部分代码切入到指定位置**，�
    ```
 
    - joinPoint 参数必须在参数列表的第一位
-   - execution表达式：`*(..)` 表示 所有方法 的所有参数类型
+   - execution表达式：`*(..)` 表示 所有方法`*` 的所有参数类型`(..)` 
 
    
 
@@ -1050,13 +1050,15 @@ AbstractAutowireCapableBeanFactory类中的 doCreateBean()
     - @GetMapping    ：是@RequestMapping(method =RequestMethod.GET) 的一个快捷方式
     - @PostMapping
     - @DeleteMapping
-    - @PatchMapping
+      - ​		@PatchMapping
 
 - @RequestBody：接收请求的数据，接收json格式数据对象
 
 - @ResponseBody：响应的数据，以json格式(相当于字符串)响应，`不走视图解析器`
 
 - @RestController：ResponseBody + Controller，被修饰的类 `不会被视图解析器解析` ==> **返回json格式**
+
+
 
 ## 参数列表接收数据
 
@@ -1081,14 +1083,22 @@ public String user(User user){
 ```
 如果使用对象的话，前端传递的**参数名**和**对象名**必须一致，否则就是null。
 
+
+
 ## SpringBoot
 
 - @SpringBootApplication:   启动**程序**:
 -  @EnableAutoConfiguration：开启SpringBoot的自动配置
 - @SpringBootConfiguration
-- @ComponentScan`
+- @ComponentScan
 - @EnableConfigurationProperties(属性读取类.class)：启用注解
-- @ConfigurationProperties(prefix = "...") ：声明当前类为属性读取类,读取application.properties/yaml
+- @ConfigurationProperties(prefix = "...") ：该注解有一个prefix属性，通过指定的前缀，绑定配置文件中的配置，该注解可以放在类上，也可以放在方法上
+
+
+
+ [springboot自动配置原理](https://mp.weixin.qq.com/s/PyBYgfAGREooqWPAuXFNgA)	
+
+
 
 
 
@@ -1098,3 +1108,13 @@ public String user(User user){
 - @Runwith(SpringRunner.class)：junit集成SpringBoot的固定写法
 
 - @SpringBootTest(classes = ... "指定引导类") ：声明是SpringBoot的测试程序
+
+
+
+
+
+
+
+## Lombak注解
+
+[详细注解文档](https://juejin.cn/post/6911476307528253453) 

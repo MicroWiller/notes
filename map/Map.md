@@ -6,11 +6,15 @@
 
 `Collection`存放一个一个对象的
 
+<img src="Map.assets/1603702560365.png" alt="1603702560365" style="zoom:67%;" />
+
+
+
 Map 存放`Entry键值对`的	
 
-<img src="Map.assets/image-20200603215017986.png" alt="image-20200603215017986" style="zoom:80%;" />
+<img src="Map.assets/1603702607511.png" alt="1603702607511" style="zoom:80%;" />
 
-- key必须是唯一的，map里面只能存放一个key为null的Entry，但是可以存放多个value为null的Entry
+> key必须是唯一的，map里面只能存放一个key为null的Entry，但是可以存放多个value为null的Entry
 
 
 
@@ -53,13 +57,19 @@ hash函数 增删改查默认为**O(1)**，常数项比较大
     
     
 2. 布隆过滤器
-  <img src="Map.assets/image-20200428210254203.png" alt="image-20200428210254203" style="zoom:50%;" />
+    <img src="Map.assets/image-20200428210254203.png" alt="image-20200428210254203" style="zoom:50%;" />
 
 
 
 
 
 ## HashMap 
+
+
+
+[HashMap源码分析](https://www.cnblogs.com/xiaoxi/p/7233201.html)	
+
+
 
 ### 结构图
 
@@ -78,6 +88,7 @@ hash函数 增删改查默认为**O(1)**，常数项比较大
 tab[i = (n - 1) & hash]); 
 // tab:数组；
 // n:数组长度；
+// i: 表示数组下标
 // hash: (h = key.hashCode()) ^ (h >>> 16), 使h的高位参与计算，可以影响到最后的下标值==>hash值更加散列
 ```
 
@@ -186,25 +197,34 @@ newCapacity = 2 * oldCapacity;
 
 ### 红黑树
 
-某个*链表长度大于8* 并且*数组总容量长度大于64* 这个时候链表就转成`红黑树`
+某个**链表长度大于8** 并且**数组总容量长度大于64** 这个时候链表就转成`红黑树`
 
 
 
 ### put方法
 
- <img src="_v_images/20200226112136216_11605.png" style="zoom:60%;" />
-
- - put 时,如果 hash 表中`没定位到`,就在链表后加一个 Entry；如果定位到了,则**更换** Entry 中的 value,并返回旧 value
+<img src="Map.assets/1603275208416.png" alt="1603275208416" style="zoom:67%;" />
 
  - JDK8以前是头插法，JDK8后是尾插法
-
-   
 
    > 为什么要从头插法改成尾插法？？   [参考链接](https://blog.csdn.net/weixin_45097458/article/details/103179093)
 
    死链
 
    扩容后，被打乱
+   
+   
+   
+   
+
+HashMap的put会返回key的上一次保存的数据，比如：
+
+```java
+HashMap<String, String> map = new HashMap<String, String>();
+System.out.println(map.put("a", "A")); // 打印null
+System.out.println(map.put("a", "AA")); // 打印A
+System.out.println(map.put("a", "AB")); // 打印AA
+```
 
 
 
@@ -285,7 +305,7 @@ public static void main(String[] args) {
 ## concurrentHashMap
 [参考文档](https://www.cnblogs.com/lijiasnong/p/9963808.html)
 
-* JDK1.7版本的ReentrantLock+Segment+HashEntry
+* JDK1.7版本的ReentrantLock+Segment+HashEntry		[1.7详细文档](https://www.cnblogs.com/xiaoxi/p/7474026.html)	
 * JDK1.8版本中synchronized+CAS+HashEntry+红黑树
 
 
@@ -450,7 +470,11 @@ CAS通常和while循环一起使用
 >
 > 左右子树**高度之差**不超过1
 
-### 红黑树
+
+
+
+
+### 红黑树[自平衡二叉树]
 
 > 红黑树的底层数据结构：二叉查找树，特殊的二叉查找树，`自平衡的`二叉查找树
 
@@ -462,11 +486,20 @@ CAS通常和while循环一起使用
 
 - 所有叶子节点都是黑色，40/48后面 还有null节点，是黑色
 
-<img src="Map.assets/image-20200428233241980.png" alt="image-20200428233241980" style="zoom:67%;" />
+
+
+### 红黑树性质
+
+1. 每个结点，不是红色，就是黑色
+2. 不可能有连在一起的红色结点
+3. 根结点，都是黑色的
+4. 每个红色结点的两个子结点都是黑色，叶子结点都是黑色：出度为0，满足了性质就可以近似的平衡了，不一定要红黑，可以为其他
 
 
 
-### 变换规则
+
+
+### 变换实例
 
 > 所有插入的点默认是`红色`
 >
@@ -489,7 +522,7 @@ CAS通常和while循环一起使用
 
 
 
-### 变换实例
+### 变换规则
 
 <img src="Map.assets/image-20200429095142907.png" alt="image-20200429095142907" style="zoom:67%;" />
 
@@ -526,11 +559,15 @@ static final class Entry<K,V> implements Map.Entry<K,V> {
     }
 ```
 
-<img src="Map.assets/image-20200502214347003.png" alt="image-20200502214347003" style="zoom:67%;" />
 
-<img src="Map.assets/image-20200508164718317.png" alt="image-20200508164718317" style="zoom:50%;" />
 
-<img src="Map.assets/image-20200508171534815.png" alt="image-20200508171534815" style="zoom:50%;" />
+
+
+### B树
+
+ [MySQL和B树的那些事](https://www.cnblogs.com/xiaoxi/p/6868087.html)	
+
+
 
 
 

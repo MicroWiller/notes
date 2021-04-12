@@ -1,4 +1,31 @@
 # Spring
+
+
+
+## 面试
+
+[70道面试题](https://blog.csdn.net/GitChat/article/details/96443995)	
+
+
+
+## 源码
+
+
+
+ [源码解析](https://juejin.cn/post/6906637797080170510)	
+
+![](https://raw.githubusercontent.com/MicroWiller/photobed/master/spingOutline.png)
+
+
+
+[spring中那些爱不释手的技巧](https://mp.weixin.qq.com/s/n8gHjDvJXc5GOryT3cYgtQ) : `统一异常处理` / `@EnableAsync` / `多种缓存` 
+
+[spring中那些爱不释手的技巧续集](https://mp.weixin.qq.com/s/M5qBCdUQEj37PGVceC3g3A) :  `声明式&编程式事务` / `starter `
+
+[sping特性](https://juejin.cn/post/6922630429254270983#heading-0)：`观察者模式` / `策略模式` / `重试机制 spring-retry`
+
+
+
 ## 1、Spring
 
 ### 1.1 简介
@@ -111,9 +138,9 @@ public void setUserDao(UserDao userDao){
 
 这种思想，从本质上解决了问题，我们程序员不用再去管理对象的创建了。
 
-系统的耦合性大大降低，可以更加专注在业务的实现上。**这是IOC的原型！**
+系统的耦合性大大降低，可以更加专注在业务的实现上。**这是IOC的原型！** 
 
-<img src="Spring.assets/image-20200725105557550.png" alt="image-20200725105557550" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/SpingIOC.png" style="zoom:67%;" />
 
 
 
@@ -253,7 +280,7 @@ System.out.println(hello.toString());
 
 bean `相当于` new出来的对象
 
-<img src="Spring.assets/image-20200702211843992.png" alt="image-20200702211843992" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/IOCTheroy.png" style="zoom:60%;" />
 
 区别：
 
@@ -264,7 +291,7 @@ bean `相当于` new出来的对象
 
 ### bean加载流程图 
 
-![image-20200702213016617](Spring.assets/image-20200702213016617.png)
+![](https://raw.githubusercontent.com/MicroWiller/photobed/master/BeanLoadFlow.png)
 
 1. spring 在实例化一个对象的时候，完全基于beanDefinition
 2. BeanDefinitionRegistry可以实现对beanDefinition的增删改查
@@ -576,7 +603,7 @@ xmlns:c="http://www.springframework.org/schema/c"
 
 ### 6.4 bean的作用域【Scope】
 
- ![](Spring.assets/20200221220305318_15053.png )
+ ![](https://raw.githubusercontent.com/MicroWiller/photobed/master/SpringScope.png)
 
 1. 单例模式（Spring默认机制）：get到的都是`同一个`对象！
 
@@ -842,7 +869,9 @@ public class People {
 
 javaConfig是Spring的一个子项目，在Spring4之后，它成为了一个`核心功能`。
 
-![](Spring.assets/20200223115559907_10382.png )
+![](https://raw.githubusercontent.com/MicroWiller/photobed/master/JavaConfig.png)
+
+
 
 实体类：
 
@@ -934,7 +963,7 @@ public class MyTest {
 - 静态代理
 - 动态代理
 
-<img src="Spring.assets/20200221220801297_28636.png" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/AOP.png" style="zoom:47%;" />
 
 
 
@@ -1100,11 +1129,13 @@ public class ProxyFactory {
 
 ## 11、 AOP
 
+
+
 ### 11.1 什么是AOP
 
 AOP（Aspect Oriented Programming）意为：`面向切面`编程，通过*预编译方式* 和*运行期动态代理* ==>实现**程序功能**的**统一维护**的一种技术。AOP是OOP的延续，是软件开发中的一个热点，也是Spring框架中的一个重要内容，是**函数式编程**的一种衍生泛型，利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的频率。
 
-<img src="Spring.assets/20200221220900079_6035.png" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/AOPInSpring.png" style="zoom:50%;" />
 
 
 
@@ -1120,13 +1151,13 @@ AOP（Aspect Oriented Programming）意为：`面向切面`编程，通过*预�
 - 切入点（PointCut）：切面通知执行的“地点”的定义。 method.invoke();
 - 连接点（jointPoint）：与切入点匹配的执行点。
 
-<img src="Spring.assets/20200221220939482_19974.png" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/AOP_Step.png" style="zoom:50%;" />
 
 
 
 SpringAOP中，通过Advice定义横切逻辑，Spring中支持5种类型的Advice：
 
-<img src="Spring.assets/20200221221007421_29623.png" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/20210206150743.png" style="zoom:50%;" />
 
 - 即AOP在不改变原有代码的情况下，去增加新的功能。
 
@@ -1177,7 +1208,7 @@ public class AfterLog implements AfterReturningAdvice {
 
 方式一：使用Spring的API接口【主要SpringAPI接口实现】
 
-<img src="Spring.assets/20200226103844244_27509.png" style="zoom:50%;" />
+![](https://raw.githubusercontent.com/MicroWiller/photobed/master/AOP_Example1.png)
 
 ```xml
 execution（<修饰符模式>？<返回类型模式> <方法名模式>（<参数模式>）<异常模式>？）
@@ -1185,91 +1216,31 @@ execution（<修饰符模式>？<返回类型模式> <方法名模式>（<参数
 
 方式二：自定义来实现AOP【主要是切面定义】
 
-<img src="Spring.assets/20200227095427810_8819.png" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/AopExample2.png" style="zoom:50%;" />
 
 方式三：使用注解实现
 
-<img src="Spring.assets/20200228094005686_30217.png" style="zoom:67%;" />
+![](https://raw.githubusercontent.com/MicroWiller/photobed/master/AopAnnotation.png)
 
 JDK？？接口     cglib？？类
 
-<img src="Spring.assets/20200228093608883_25095.png" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/MicroWiller/photobed/master/AopAspect.png" style="zoom:50%;" />
 
 
 
 
 
-##  整合Mybatis
+### 11.4 AOP实战
 
-步骤：
-
-1. 导入相关jar包
-   - junit
-   - Mybatis
-   - mysql数据库
-   - spring相关的
-   - aop织入
-   - mybatis-spring【new知识点】
-2. 编写配置文件
-3. 测试
+[怎么知道整个系统每个方法的执行时间](https://juejin.cn/post/6923737436317188103)	
 
 
 
-### 12.1 回忆mybatis
-
-1. 编写实体类
-2. 编写核心配置文件
-    ![](_v_images/20200229094017615_7657.png =600x)
-3. 编写接口
-    ```java
-    public interface Mapper{
-        public List<User> selectUser();
-    }
-    ```
-4. 编写Mapper.xml
-    ![](_v_images/20200229094416945_589.png =300x)
-5. 测试
-    ![](_v_images/20200229094824821_11115.png =500x)
-
-解决Maven中静态资源过滤：
-```xml
-<build>
-<resources>
-    <resource>
-        <directory>src/main/java</directory>
-        <includes>
-            <include>**/*.properties</include>
-            <include>**/*.xml</include>
-        </includes>
-        <filtering>false</filtering>
-    </resource>
-    <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-            <include>**/*.properties</include>
-            <include>**/*.xml</include>
-        </includes>
-        <filtering>false</filtering>
-    </resource>
-</resources>
-</build>
-```
 
 
-### 12.2 Mybatis-Spring
 
-1. 编写数据源配置
-2. sqlSessionFactory
-3. sqlSessionTemplate
-4. 需要给接口加实现类
-5. 将自己写的实现类，注入到Spring中
-6. 测试
-![](_v_images/20200302092854824_3658.png =1000x)
-![](_v_images/20200301094706780_10719.png =800x)
-![](_v_images/20200301095904768_19730.png =600x)
 
-applicationContext.xml
-![](_v_images/20200301100159567_17453.png =500x)
+
 
 ## 13、 声明式事务
 
@@ -1295,7 +1266,7 @@ applicationContext.xml
 ### 13.2 Spring中的事务管理
 
 - 声明式事务：AOP
-    ![](Spring.assets/20200302094445162_28886.png )
+    ![](https://raw.githubusercontent.com/MicroWiller/photobed/master/AopDao.png)
 - 编程式事务：需要在代码中，进行事务的管理
 
 
@@ -1323,10 +1294,14 @@ applicationContext.xml
 
 ## FactoryBean
 
-FactoryBean 本身就是一个bean
+FactoryBean `本身就是一个bean` 
+
+并非普通的工厂bean，它隐藏了实例化一些复杂Bean的细节，给上层应用带来了便利
 
 
 
 ## BeanFactory
 
 创建对象，并进行装配的工厂
+
+spring容器的`顶级接口`，管理bean的工厂

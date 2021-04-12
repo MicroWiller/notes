@@ -1,6 +1,12 @@
 # IO 
 
-[理论基础](https://www.bilibili.com/video/BV1Af4y117ZK?t=7&p=2)	：
+
+
+## 底层原理
+
+[原理爽文：BIO / NIO / 多路复用](https://mp.weixin.qq.com/s/_Eh7eZLtcUjrp9QiCvLmrw)	
+
+[理论基础](https://www.bilibili.com/video/BV1Af4y117ZK?t=7&p=2)	
 
 <img src="IO.assets/image-20200730155347922.png" alt="image-20200730155347922" style="zoom:67%;" />
 
@@ -13,6 +19,23 @@
 `中断（INT x80）`、`系统调用`：用户空间 **想**系统调用 内核空间时，所用到的方法【实际上是，CPU来调用】
 
 - 【保护模式：用户空间不能直接调用内核空间】
+
+
+
+## 高性能IO
+
+[详细解说](https://mp.weixin.qq.com/s?subscene=23&__biz=MzIyNjMxOTY0NA==&mid=2247486319&idx=1&sn=3d49360a9451916b277b2cba6fca7873&chksm=e873071cdf048e0a4f64c7445a9815e61d3b820098da6fda9e2a70d5038ed92a0e13cbfca04d&scene=7&key=4cf40c946f4d610cb1109fbff319a16d3a900e480fdb645f4a98787800e1ff5ea2220003f4f92690d770fcb0febddb7075659706985f1b1de7f3ddcf01667d05aaa47cb2821dc4038c864e9d28c3b24e494342a82cee776f2991a240dca969cc4117b80925b7d6a7fd2240ede814f705f27d9449ee01ef72968ed0b01f39be21&ascene=0&devicetype=Windows+10+x64&version=62090538&lang=zh_CN&exportkey=A4TnNhVt1XAnKcBNTIaRRW4%3D&pass_ticket=gGX9IIfT9z8Xkp1Zru8gT7yx0lpDUCSJmzhIT9edLuBok%2BA4gr4cc5xoJi9NBnGg&wx_header=0)	
+
+- I/O优化：零拷贝技术
+- I/O优化：多路复用技术
+- 线程池技术
+- 无锁编程技术
+- 进程间通信技术
+- RPC && 序列化技术
+- 数据库索引技术
+- 缓存技术 && 布隆过滤器
+- 全文搜索技术
+- 负载均衡技术
 
 
 
@@ -569,6 +592,28 @@ strace -ff  -o out 待执行的程序 待执行的文件
 # -o：输出
 # out：以out三个字母开头的，每个线程的日志文件
 ```
+
+
+
+
+
+
+
+## 零拷贝
+
+
+
+ [mmap与sendFile的区别是什么？](https://www.cnblogs.com/ericli-ericli/articles/12923420.html)：   										时序图(DMA)
+
+1. mmap 适合`小数据量读写`，sendFile 适合`大文件传输`。
+2. mmap 需要 4 次上下文切换，3 次数据拷贝；sendFile 需要 3 次上下文切换，最少 2 次数据拷贝。
+3. sendFile 可以利用 `DMA` 方式，减少 CPU 拷贝，mmap 则不能（必须从内核拷贝到 `Socket` 缓冲区）。
+
+
+
+[零拷贝小故事](https://mp.weixin.qq.com/s?__biz=MzIyNjMxOTY0NA==&mid=2247485545&idx=1&sn=c7be17afdf3a6671e25050825403b305&scene=21#wechat_redirect)	
+
+延申：[DMA( Direct Memory Access) 直接存储器访问](https://mp.weixin.qq.com/s?__biz=MzIyNjMxOTY0NA==&mid=2247485292&idx=1&sn=528260520a264ce655f9eede03738976&scene=21#wechat_redirect) ： 用于I/O外部设备与内存之间搬运数据 
 
 
 

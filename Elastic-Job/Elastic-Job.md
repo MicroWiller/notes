@@ -74,6 +74,8 @@ Elastic-Job 主要的设计理念是**无中心化**的**分布式定时调度�
 
 
 
+ [Quartz实例](https://mp.weixin.qq.com/s?__biz=MzU1Nzg4NjgyMw==&mid=2247487100&idx=1&sn=0e0bff1ad2d140249766366b95698f62&chksm=fc2fb274cb583b626ffe6ac9dd047f460f0171b796d4ac66f41c9243cd2ade1e5bb32b654476&mpshare=1&srcid=1019yposyGepfX4VPIUfLKXi&sharer_sharetime=1603076875880&sharer_shareid=fe765735c34d6be25d417f500770ee79&scene=2&subscene=1&clicktime=1603077676&enterid=1603077676&ascene=2&devicetype=android-29&version=2700133f&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&exportkey=A8%2F%2BEo64eeA0qDjTzrKkPec%3D&pass_ticket=zSkE%2B8pvXsZXUyY4edFdar1JIvYlcSfSFrLYa%2BLZpplJvDEdpgNX1E59p78z9YNF&wx_header=1) 
+
 
 
 ### 分片
@@ -135,6 +137,46 @@ elastic-job是去中心化设计
 每个作业以自己为中心？？
 
 缺点是可能会存在各个作业服务器的时间不一致的问题。
+
+
+
+
+
+
+
+## cron
+
+| 时间元素   | 可出现的字符  | 有效数值范围 |
+| :--------- | :------------ | :----------- |
+| Seconds    | , - * /       | 0-59         |
+| Minutes    | , - * /       | 0-59         |
+| Hours      | , - * /       | 0-23         |
+| DayofMonth | , - * / ? L W | 0-31         |
+| Month      | , - * /       | 1-12         |
+| DayofWeek  | , - * / ? L # | 1-7或SUN-SAT |
+
+
+
+| 字符 | 作用                                      | 举例                                                         |
+| :--- | :---------------------------------------- | :----------------------------------------------------------- |
+| ,    | 列出枚举值                                | 在Minutes域使用5,10，表示在5分和10分各触发一次               |
+| -    | 表示触发范围                              | 在Minutes域使用5-10，表示从5分到10分钟每分钟触发一次         |
+| *    | 匹配任意值                                | 在Minutes域使用*, 表示每分钟都会触发一次                     |
+| /    | 起始时间开始触发，每隔固定时间触发一次    | 在Minutes域使用5/10,表示5分时触发一次，每10分钟再触发一次    |
+| ?    | 在DayofMonth和DayofWeek中，用于匹配任意值 | 在DayofMonth域使用?,表示每天都触发一次                       |
+| #    | 在DayofMonth中，确定第几个星期几          | 1#3表示第三个星期日                                          |
+| L    | 表示最后                                  | 在DayofWeek中使用5L,表示在最后一个星期四触发                 |
+| W    | 表示有效工作日(周一到周五)                | 在DayofMonth使用5W，如果5日是星期六，则将在最近的工作日4日触发一次 |
+
+
+
+[Cron在线表达式生成器](https://cron.qqe2.com/) 
+
+
+
+
+
+
 
 
 

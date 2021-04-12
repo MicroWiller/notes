@@ -1,5 +1,13 @@
 # Linux
 
+
+
+## 
+
+
+
+## 目录
+
 ==在Linux世界里，一切皆文件==
 
 - /bin：Binary，存放最常用的命令
@@ -13,12 +21,6 @@
 - /opt：Option，额外安装软件的安装目录
 - /usr：另一个给主机额外安装软件的安装目录
 - /var：Variable，变量，存放不断扩充的东西，存放经常被修改的目录，列如各种日志文件
-
-
-
-
-
-
 
 
 
@@ -46,6 +48,10 @@
 - 额外查看CPU的命令
     ![](Linux.assets/20200123214136645_886.png )
 
+
+
+
+
 ## 内存
 
 - free
@@ -59,7 +65,11 @@
     ![](Linux.assets/20200123215159985_25033.png)
 
 
+
+
+
 ## 磁盘IO
+
 - iostat
     ![](Linux.assets/20200123215509747_334.png )
     ![](Linux.assets/20200123215622305_22791.png )
@@ -68,14 +78,21 @@
 
 
 ## 网络IO
-- ifstat
-    下载：
-    ![](Linux.assets/20200123220118135_16419.png )
+ ifstat
+
+
 
 ## 网络服务(端口)
 
 netstat -anp 查看系统网络服务(端口)
-![](Linux.assets/20200218161131544_8346.png )
+
+ss (socket statistics)
+
+ [一台Linux服务器最多能支撑多少个TCP连接？](https://mp.weixin.qq.com/s/J0Abwz20IO9N0NxooSEKXQ)	
+
+
+
+
 
 ## CPU占用过高的定位分析思路
 

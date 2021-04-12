@@ -1,8 +1,4 @@
-
-
-
-
-
+## 函数式接口
 
 
 
@@ -49,3 +45,22 @@
 
 
 ![image-20200729092030332](Java8NewCharacter.assets/image-20200729092030332.png)
+
+
+
+
+
+
+
+## stream
+
+
+
+[stream的常用开发技巧](https://juejin.cn/post/6904465203446939662)	
+
+
+
+
+
+
+

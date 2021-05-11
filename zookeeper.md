@@ -1,6 +1,22 @@
-# zookeeper
+# `zookeeper`
+
+
 
 `zookeeper`，作为一个分布式协调服务，用途挺多，服务注册与发现、分布式锁、集群选举、配置中心等
+
+
+
+
+
+
+
+## 面试
+
+ [从面试题了解`ZooKeeper`](https://zhuanlan.zhihu.com/p/223341260)  
+
+
+
+
 
 
 

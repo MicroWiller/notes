@@ -1,0 +1,12 @@
+.idea
+.buildpath
+.project
+.settings
+.Ds_Store
+composer.json
+composer.lock
+a.php
+/public/uploads
+/runtime
+*.png
+*.jpg

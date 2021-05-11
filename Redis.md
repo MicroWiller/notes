@@ -63,6 +63,10 @@ del key
 
 
 
+[文件事件处理器](#文件事件处理器) 
+
+
+
 [需要掌握的Redis原理](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=592#/detail/pc?id=6063) 
 
 <img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/RedisOfHigh.png" style="zoom:50%;" />
@@ -229,11 +233,42 @@ Redis的数据结构：
 
 
 
+
+
+
+
+## 文件事件处理器
+
+
+
+ [Redis 到底是单线程还是多线程？](https://www.cnblogs.com/javastack/p/12848446.html) 
+
+<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/SingleThreadOfRedis.png" style="zoom:57%;" />
+
+- 文件事件处理器：多个套接字、IO多路复用程序、文件事件分派器、事件处理器。
+-  因为文件事件分派器队列的**消费**是单线程的，所以Redis才叫单线程模型。
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 穿透/击穿/雪崩
 
 
 
 [小故事](https://mp.weixin.qq.com/s?__biz=MzIyNjMxOTY0NA==&mid=2247486528&idx=1&sn=3f7b09eb21969fdb16f5b0805ff69fed&scene=21#wechat_redirect)	
+
+
+
+<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/BUfferDesign.png" style="zoom:67%;" />
 
 
 

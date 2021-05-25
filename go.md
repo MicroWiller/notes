@@ -2155,17 +2155,15 @@ func Test_expired_transaction_Execute(t *testing.T) {
 
 ## 服务监控
 
-**服务监控**
-
-Go 语言的 runtime 包提供了多个接口供开发者获取当前进程运行的状态。
-
-可以在框架中集成 协程数量，协程状态，GC 停顿时间，GC 频率，堆栈内存使用量等监控。
-
-实时采集每个当前正在运行的服务的这些指标，分别针对各项指标设置报警阈值，例如针对协程数量和 GC 停顿时间。另一方面，我们也在尝试做一些运行时服务的堆栈和运行状态的快照，方便追查一些无法复现的进程重启的情况。
 
 
 
-pprof：runtime / net
+
+
+
+[pprof](https://segmentfault.com/a/1190000016412013)：runtime / net
+
+
 
 [go-torch](https://github.com/uber-archive/go-torch) 
 
@@ -2173,7 +2171,9 @@ pprof：runtime / net
 
  [golang性能诊断](https://mp.weixin.qq.com/s/yZUE8N-Qb-AB81DgA1cV_w)：`pprof` / `trace` / `linux`
 
-![](https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/LinuxMonitor.png)
+
+
+
 
 
 
@@ -2318,9 +2318,87 @@ protoc --go_out=plugins=grpc:. ./proto/*.proto
 
 
 
-## GPM
+## GMP
 
- 
+
+
+### 定义
+
+
+
+1. G — 表示 Goroutine，它是一个待执行的任务；
+2. M — 表示操作系统的线程，它由*操作系统*的“调度器” 调度和管理；
+3. P — 表示处理器，它可以被看做运行在线程上的**本地调度器**；
+
+
+
+可以在程序中使用 [`runtime.GOMAXPROCS`](https://draveness.me/golang/tree/runtime.GOMAXPROCS) 来改变最大的活跃线程数
+
+<img src="go.assets/image-20210524211104374.png" alt="image-20210524211104374" style="zoom:67%;" />
+
+
+
+- 默认情况下，四核机器会创建四个活跃的操作系统线程，每一个线程都对应一个运行时中的 [`runtime.m`](https://draveness.me/golang/tree/runtime.m) 结构体
+
+
+
+### P与 G / M 
+
+```c
+struct P {
+	Lock;
+
+	uint32	status;
+	P*	link;
+	uint32	tick;
+	M*	m;				// 反向持有一个线程
+	MCache*	mcache;
+
+	G**	runq;			// 可运行的 Goroutine 组成的环形的运行队列
+	int32	runqhead;
+	int32	runqtail;
+	int32	runqsize;
+
+	G*	gfree;
+	int32	gfreecnt;
+};
+```
+
+
+
+
+
+ <img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/GMPOfGolang.png" style="zoom:67%;" />
+
+
+
+- 调度器在调度时，会从处理器(P)的队列中，选择*队列头*的 Goroutine 放到线程 M 上执行
+
+
+
+
+
+
+
+
+
+### GMP & Thread
+
+
+
+- 调度器通过使用与 CPU 数量相等的线程（CPU数量 == 线程数量）减少线程频繁切换的内存开销
+
+- 同时，在每一个线程上，执行额外开销更低的 `Goroutine` 来，**降低**操作系统和硬件的负载
+
+
+
+
+
+
+
+
+
+
 
  [Goroutine 数量控制在多少合适，会影响 GC 和调度？](https://mp.weixin.qq.com/s/uWP2X6iFu7BtwjIv5H55vw) 
 
@@ -2336,9 +2414,60 @@ protoc --go_out=plugins=grpc:. ./proto/*.proto
 
 
 
+## 内存分配
 
 
 
+
+
+<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/GoWithMemoryLayout.png" style="zoom:67%;" />
+
+
+
+对应的数据结构 [`runtime.mspan`](https://draveness.me/golang/tree/runtime.mspan)、[`runtime.mcache`](https://draveness.me/golang/tree/runtime.mcache)、[`runtime.mcentral`](https://draveness.me/golang/tree/runtime.mcentral) 和 [`runtime.mheap`](https://draveness.me/golang/tree/runtime.mheap) 
+
+
+
+
+
+
+
+## 垃圾收集
+
+
+
+
+
+
+
+参考： [7.2 垃圾收集器](https://draveness.me/golang/docs/part3-runtime/ch07-memory/golang-garbage-collector/#72-垃圾收集器) 
+
+
+
+## 面向对象
+
+
+
+ [golang面向对象分析](https://www.cnblogs.com/457220157-FTD/p/14703692.html)：封装 / 继承 / 多态
+
+
+
+封装：struct
+
+
+
+
+
+继承：
+
+- ​    匿名组合    (Pseudo is-a)
+- 非匿名组合    (has-a)
+
+
+
+
+
+多态：接口
 
 
 

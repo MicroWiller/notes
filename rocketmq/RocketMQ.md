@@ -179,7 +179,9 @@ sh bin/mqshutdown broker
 * Topic：区分消息的种类；一个发送者可以发送消息给一个或者多个Topic；一个消息的接收者可以订阅一个或者多个Topic消息
 * Message Queue：相当于是Topic的分区；用于并行发送和接收消息
 
-![](img/RocketMQ角色.jpg)
+<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/RocketMQWithRole.png" style="zoom:47%;" />
+
+
 
 ## 3.2 集群搭建方式
 
@@ -224,7 +226,9 @@ sh bin/mqshutdown broker
 
 消息高可用采用2m-2s（同步双写）方式
 
-![](img/RocketMQ集群.png)
+<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/RocketMQExample.png" style="zoom:80%;" />
+
+
 
 ### 3.3.2 集群工作流程
 

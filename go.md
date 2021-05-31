@@ -672,15 +672,41 @@ type hmap struct {
 
 
 
-
-
-
-
 ## 引用类型
 
 
 
-### Map
+
+
+**引用类型的零值都是 nil：** 
+
+<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/AllOfTypeInGo.png" style="zoom:50%;" />
+
+
+
+
+
+在 Go 语言中，函数的参数传递`只有值传递`，而且传递的 *实参* `都是原始数据的一份拷贝`
+
+- 如果拷贝的内容是值类型的，那么在函数中就`无法修改`原始数据
+
+- 如果拷贝的内容是指针（或者可以理解为引用类型 map、chan 等），那么在函数中就`可以修改`原始数据
+
+
+
+
+
+
+
+
+
+
+
+## Map
+
+
+
+### 引用类型
 
 ```go
 func main() {
@@ -696,15 +722,13 @@ func modifyMap(p map[string]int)  {
 // 成功修改：
 // will的年龄为 18
 // will的年龄为 20
+```
 
 
-// 遍历Map
-for key, value := range m {
-    fmt.Println("key: ", key, "; value: ", value)
-}
-// 如果需要特定顺序的遍历结果，正确的做法是先排序
 
+### if 判断
 
+```go
 // 判断key是否存在
 
 if value, ok := map[key]; ok {
@@ -714,6 +738,35 @@ if value, ok := map[key]; !ok {
     // 不存在
 }
 ```
+
+
+
+
+
+
+
+### for 循环
+
+```go
+// 不关心索引和数据的情况
+for range m {}
+
+// 只关心索引的情况,只遍历键, 无须将值改为匿名变量形式，忽略值即可
+for kwy := range m {}
+
+// 关心索引和数据的情况
+for kwy, value := range m {}
+
+
+// 如果需要特定顺序的遍历结果，正确的做法是先排序
+
+```
+
+
+
+
+
+### hmap
 
 
 
@@ -731,7 +784,17 @@ func makemap(t *maptype, hint int, h *hmap) *hmap{
 
 
 
-### chan
+
+
+
+
+
+
+
+
+## chan
+
+
 
 Go 语言并发模块中的 `channel`, **本质上也是个指针** : 
 
@@ -749,29 +812,13 @@ func makechan(t *chantype, size int64) *hchan {
 
 
 
-**引用类型的零值都是 nil：** 
-
-<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/AllOfTypeInGo.png" style="zoom:50%;" />
-
-
-
-
-
-### 总结
-
-在 Go 语言中，函数的参数传递`只有值传递`，而且传递的 *实参* `都是原始数据的一份拷贝`
-
-- 如果拷贝的内容是值类型的，那么在函数中就`无法修改`原始数据
-
-- 如果拷贝的内容是指针（或者可以理解为引用类型 map、chan 等），那么在函数中就`可以修改`原始数据
 
 
 
 
 
 
-
-## SliceHeader
+## 切片&数组
 
 
 
@@ -907,6 +954,31 @@ func main() {
 
 
 
+### for range
+
+
+
+对于数组和切片来说，Go 语言有三种不同的遍历方式：
+
+
+
+```go
+// 不关心索引和数据的情况
+for range a {}
+
+// 只关心索引的情况
+for i := range a {}
+
+// 关心索引和数据的情况
+for i, elem := range a {}
+```
+
+
+
+
+
+
+
 
 
 ### 高效的原因
@@ -934,7 +1006,7 @@ func main() {
 
 #### 强制转换
 
- []byte(s) 和 string(b) 这种`强制转换`会重新拷贝一份字符串
+ []byte(s) 和 string(b) 这种`强制转换`**会重新拷贝一份字符串** 
 
 ```go
 s := "will"

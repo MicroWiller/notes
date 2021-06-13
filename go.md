@@ -161,6 +161,10 @@ func main() {
 
 
 
+[Golang HLS 构建流服务](https://hackernoon.com/building-a-media-streaming-server-using-go-and-hls-protocol-j85h3wem) 
+
+
+
 
 
 
@@ -1072,6 +1076,40 @@ fmt.Printf("%v",b)
 
 
 
+参考：[2 个 Header](https://mp.weixin.qq.com/s/rGqM1wMlqQEoJSgyrgZNLg) 
+
+```go
+func main() {
+ s := "脑子进煎鱼了"
+ v := string2bytes1(s)
+ fmt.Println(v)
+}
+
+func string2bytes1(s string) []byte {
+ 
+ // 在程序必须保留一个单独的、正确类型的指向底层数据的指针
+ stringHeader := (*reflect.StringHeader)(unsafe.Pointer(&s))
+
+ var b []byte
+ pbytes := (*reflect.SliceHeader)(unsafe.Pointer(&b))
+ pbytes.Data = stringHeader.Data
+ pbytes.Len = stringHeader.Len
+ pbytes.Cap = stringHeader.Len
+
+ return b
+}
+
+
+// 在性能方面，若只是期望单纯的转换，对容量（cap）等字段值不敏感，也可以使用以下方式：
+func string2bytes2(s string) []byte {
+ return *(*[]byte)(unsafe.Pointer(&s))
+}
+```
+
+
+
+
+
 #### SliceHeader/StringHeader
 
 - SliceHeader 有 Data、Len、Cap 三个字段
@@ -1107,6 +1145,20 @@ b1:=*(*[]byte)(unsafe.Pointer(sh))
 
 
 
+
+扩展：[Go 语言中的零拷贝优化](https://developer.51cto.com/art/202106/665738.htm) 
+
+
+
+
+
+
+
+## 枚举
+
+
+
+ [小技巧分享：在 Go 如何实现枚举？](https://mp.weixin.qq.com/s/4jvhRQvKlMiYweSOG6xCrA) 
 
 
 
@@ -1888,6 +1940,8 @@ func BenchmarkFibonacci(b *testing.B) {
 
 
 
+
+
 ### 内存统计
 
 统计每次操作分配内存的次数，以及每次操作分配的字节数
@@ -1922,6 +1976,10 @@ ok      gotour/ch18     2.533s
 
 ### 逃逸分析
 
+
+
+#### 逃逸实列
+
 ```go
 // ch19/main.go
 func newString() *string{
@@ -1947,13 +2005,13 @@ ch19/main.go:16:8: new(string) escapes to heap
 
 - -m 表示打印出逃逸分析信息
 - -l 表示禁止内联
-- 指针作为函数返回值的时候，一定会发生逃逸
+- **指针**作为*函数返回值* 的时候，一定会发生逃逸
 
 
 
 
 
-**优化后的函数代码如下：** 
+#### 代码优化
 
 ```go
 func newString() string{
@@ -1975,6 +2033,10 @@ ch19/main.go:14:8: new(string) does not escape
 
 
 
+#### 被已经逃逸的指针 引用 的变量 也会发生逃逸
+
+
+
 ==并不是不使用指针就不会发生逃逸==
 
 ```go
@@ -1989,7 +2051,11 @@ ch19/main.go:13:14: "will" escapes to heap
 ch19/main.go:17:8: new(string) does not escape
 ```
 
-「will」**逃逸**到了堆上，这是因为「will」这个字符串**被已经逃逸的指针变量引用**，所以它也跟着逃逸了
+
+
+「will」**逃逸**到了堆上，这是因为「will」这个字符串**被已经逃逸的指针变量** *引用*，所以它也跟着逃逸了
+
+
 
 ```go
 func (p *pp) printArg(arg interface{}, verb rune) {
@@ -1998,8 +2064,15 @@ func (p *pp) printArg(arg interface{}, verb rune) {
 }
 ```
 
-- 被已经逃逸的指针引用的变量也会发生逃逸
--  被 slice、map 和 chan，这三种类型引用的指针也会发生逃逸，
+
+
+
+
+
+
+#### 被 slice、map 和 chan，这三种类型引用的指针也会发生逃逸
+
+
 
 ```go
 func main() {
@@ -2017,11 +2090,11 @@ ch19/main.go:15:20: map[int]*string literal does not escape
 ```
 
 - 变量 m 没有逃逸，**反而**被变量 m 引用的变量 s 逃逸到了堆上
-- 所以被map、slice 和 chan 这三种类型引用的指针一定会发生逃逸的
-
-
+- 所以被map、slice 和 chan 这三种类型 引用 的指针一定会发生逃逸的
 
 > 指针虽然可以减少内存的拷贝，但它同样会引起逃逸，所以要根据实际情况选择是否使用指针。
+
+
 
 
 
@@ -2035,6 +2108,8 @@ ch19/main.go:15:20: map[int]*string literal does not escape
 4. 尽可能避免使用锁、并发加锁的范围要尽可能小
 5. 使用 StringBuilder 做 string 和 [ ] byte 之间的转换
 6. defer 嵌套不要太多
+
+
 
 > 小提示：性能优化的时候，要结合基准测试，来验证自己的优化是否有提升。
 
@@ -2351,6 +2426,16 @@ Pattern: /users/*id
 
 
 
+
+## 优雅重启
+
+
+
+[一文讲懂服务的优雅重启和更新](https://mp.weixin.qq.com/s/yryqf8SCzvt-BFj8j5bZ2w) 
+
+
+
+<img src="https://cdn.jsdelivr.net/gh/MicroWiller/photobed@master/GracefulStopOfGo-zero.png" style="zoom:67%;" />
 
 
 
